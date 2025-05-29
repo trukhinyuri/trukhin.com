@@ -1,0 +1,51 @@
+YURI TRUKHIN  
+Products Lead @ JetBrains | Cloud-Native & IDE Platforms | Ex-MTS Hyperscale Founder  
+Amsterdam • yuri@trukhin.com • linkedin.com/in/trukhinyuri • trukhin.com  
+
+---
+
+**PROFILE**  
+Product & technology leader with 23 years in software engineering and 10 years building and scaling product orgs. Owns the JetBrains IDE Platform strategy (cloud, DevOps, SRE tooling). Formerly built CloudMTS hyperscale cloud from zero to 140+ engineers and 20+ services. Microsoft MVP. MBA (2024).  
+
+---
+
+**SIGNATURE ACHIEVEMENTS**  
+- **JetBrains** – Defined cloud-native vision, launched new terminal emulator and JetBrains Agent; steering platform used by 20 M+ developers worldwide.  
+- **MTS Group (CloudMTS)** – Grew green-field team 2 → 144, shipped proprietary Cloud Hub, billing, and 17 managed services (Kubernetes, DBaaS, GPU). Set hyperscale roadmap adopted by the board.  
+- **Infobox** – Drove InfoboxCloud to top-4 global Jelastic PaaS provider, won Microsoft Partner Solutions contest, raised cloud revenue double-digits YoY.  
+- **Oil & Gas Geodata Platform** – Cut reserve-calculation cycle time 3× via custom .NET & Java analysis suite, leading 10-engineer team.  
+
+---
+
+**EXPERIENCE**  
+- **2023 – Now**: Products Lead – JetBrains IDE Platform  
+  Own platform roadmap & strategy; lead multi-team org (Clouds & Deployment, DevEnv, Platform UI). Drove modular IDE architecture and “light-performance” mode.  
+- **2020 – 2023**: Chief Cloud Platform & Services Exec – MTS  
+  Architected hyperscale public-cloud; launched 20+ IaaS/PaaS products; implemented open-standard micro-billing; instated autonomous “cell” org model.  
+- **2018 – 2020**: Principal Product Leader – GPU & AI Services (MTS)  
+  Conceived GPU SuperCloud; opened new €multi-M ARR line; built Golang/JS pre-billing serving hundreds of enterprises.  
+- **2013 – 2018**: Cloud Strategy & Dev Mgr – Infobox  
+  Designed & launched InfoboxCloud, Azure Pack Infrastructure; led all Microsoft partnership wins.  
+- **2005 – 2013**: Software Engineer → Tech Lead – Geo-Research Center  
+  Built internal geodata stack (.NET, SQL, Java) accelerating reserves analysis; managed 10-person R&D team.  
+
+---
+
+**TECHNICAL STACK**  
+- **Cloud / DevOps**: Kubernetes, IaC (Terraform, YAML), Docker, DevContainers, Serverless  
+- **Languages**: Golang, C#, JavaScript/TypeScript, Kotlin, Python  
+- **Architecture**: Platform Engineering, Distributed Systems, High-Perf IDEs  
+- **Methodologies**: Agile (Scrum & Kanban), OKR, Non-violent Management  
+
+---
+
+**EDUCATION & CREDENTIALS**  
+- MBA, Russian-Armenian University, 2024  
+- M.Sc. Computer Systems, Tver State Technical University, 2010  
+- Certifications: Big Data Analytics with Spark, Product Roadmaps, Data-Driven Sales, etc.  
+- Microsoft Most Valuable Professional awardee  
+
+---
+
+**COMMUNITY**  
+Conference speaker (Devoxx, HighLoad++), tech blogger (blog.trukhin.com), open-source contributor.  

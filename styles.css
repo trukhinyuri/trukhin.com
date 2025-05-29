@@ -1,0 +1,71 @@
+/* Custom styles for the personal site */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hero Section */
+.hero {
+    @apply bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-20 text-center;
+}
+
+.hero h1 {
+    @apply text-5xl font-bold mb-4;
+}
+
+/* Value Propositions */
+.value-prop {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-8 my-12;
+}
+
+.value-prop-card {
+    @apply bg-white shadow-lg rounded-lg p-6 text-center transition-transform transform hover:scale-105;
+}
+
+.value-prop-card h3 {
+    @apply text-xl font-semibold mb-2;
+}
+
+/* Experience Timeline */
+.timeline {
+    @apply relative border-l border-gray-300;
+}
+
+.timeline-item {
+    @apply mb-8 pl-6;
+}
+
+.timeline-item h4 {
+    @apply text-lg font-bold;
+}
+
+/* Skills Grid */
+.skills-grid {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-4 my-12;
+}
+
+.skill-badge {
+    @apply bg-gray-200 rounded-full px-4 py-2 text-sm text-gray-700;
+}
+
+/* Impact Metrics */
+.impact-metrics {
+    @apply text-center my-12;
+}
+
+.impact-metrics h2 {
+    @apply text-3xl font-bold mb-4;
+}
+
+/* Call to Action */
+.call-to-action {
+    @apply bg-indigo-600 text-white py-4 text-center my-12;
+}
+
+.call-to-action h2 {
+    @apply text-2xl font-bold;
+}
+
+.call-to-action button {
+    @apply bg-white text-indigo-600 font-semibold py-2 px-4 rounded mt-4 transition-colors hover:bg-gray-200;
+}
