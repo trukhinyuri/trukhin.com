@@ -1,0 +1,27 @@
+{
+  "name": "personal-site",
+  "version": "1.0.0",
+  "description": "A personal site showcasing the profile and achievements of Yuri Trukhin, aimed at tech employers, investors, and partners.",
+  "main": "src/index.html",
+  "scripts": {
+    "build": "postcss src/styles.css -o dist/styles.css",
+    "watch": "postcss src/styles.css -o dist/styles.css --watch",
+    "start": "live-server --open=src/index.html"
+  },
+  "keywords": [
+    "personal-site",
+    "portfolio",
+    "Yuri Trukhin",
+    "web-development"
+  ],
+  "author": "Yuri Trukhin",
+  "license": "MIT",
+  "dependencies": {
+    "tailwindcss": "^2.2.19",
+    "postcss": "^8.4.6",
+    "autoprefixer": "^10.4.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

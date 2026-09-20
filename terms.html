@@ -1,67 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Terms of Service — agent-tools</title>
-  <meta name="description" content="Terms of service for agent-tools, a personal automation tool with one user: its author.">
-  <link rel="canonical" href="https://trukhin.com/terms.html">
-  <meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#101114" media="(prefers-color-scheme: dark)">
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/assets/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service — agent-tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
 </head>
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <header class="site-header">
-    <div class="container">
-      <a class="wordmark" href="/">Yuri Trukhin<span>.</span></a>
-      <nav class="site-nav" aria-label="Legal">
-        <ul>
-          <li><a href="/terms.html" aria-current="page">Terms</a></li>
-          <li><a href="/privacy.html">Privacy</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main id="main">
-    <div class="page-head">
-      <div class="container">
-        <p class="eyebrow">agent-tools · last updated 26 August 2026</p>
-        <h1>Terms of Service</h1>
-      </div>
-    </div>
-
-    <div class="container">
-      <article class="prose">
-        <p>agent-tools is a personal automation tool. It is written, run and used by Yuri Trukhin on his own computers, to read his own accounts on services he already uses. It is not a product, it is not offered to anyone else, and there is no sign-up.</p>
-
-        <h2>Who may use it</h2>
-        <p>One person: the author. There are no other users, no accounts to create and no way for a third party to connect an account to it.</p>
-
-        <h2>What it does</h2>
-        <p>It reads data from services the author is already signed in to, through each service's own documented API and with credentials the author issued to himself. Everything it retrieves stays on his machines. It publishes nothing, posts nothing and sends nothing on anyone's behalf.</p>
-
-        <h2>No warranty</h2>
-        <p>The tool is provided as is, without warranty of any kind. The author accepts no liability arising from its use, since he is its only user.</p>
-
-        <h2>Changes and contact</h2>
-        <p>These terms may change at any time; the date above records the last change. Questions: <a href="mailto:yuri@trukhin.com">yuri@trukhin.com</a>.</p>
-      </article>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-row">
-      <p>Yuri Trukhin · <a href="/">trukhin.com</a> · static, no tracking</p>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/terms.html">Terms</a></li>
-        <li><a href="/privacy.html">Privacy</a></li>
+<body class="bg-white text-gray-800 font-sans">
+  <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+    <div class="container mx-auto flex items-center justify-between py-4 px-6">
+      <a href="/" class="text-xl font-bold text-blue-900">YURI TRUKHIN</a>
+      <ul class="flex space-x-6 text-gray-700">
+        <li><a href="/terms.html" class="hover:text-blue-600">Terms</a></li>
+        <li><a href="/privacy.html" class="hover:text-blue-600">Privacy</a></li>
       </ul>
     </div>
-  </footer>
+  </nav>
+  <main class="max-w-3xl mx-auto px-6 py-14">
+    <h1 class="text-3xl font-extrabold text-blue-900 mb-2">Terms of Service</h1>
+    <p class="text-sm text-gray-500 mb-10">agent-tools · last updated 26 August 2026</p>
+    <p class="mb-6">agent-tools is a personal automation tool. It is written, run and used by Yuri Trukhin on his own computers, to read his own accounts on services he already uses. It is not a product, it is not offered to anyone else, and there is no sign-up.</p>
+
+    <h2 class="text-xl font-bold text-blue-900 mt-10 mb-3">Who may use it</h2>
+    <p class="mb-6">One person: the author. There are no other users, no accounts to create and no way for a third party to connect an account to it.</p>
+
+    <h2 class="text-xl font-bold text-blue-900 mt-10 mb-3">What it does</h2>
+    <p class="mb-6">It reads data from services the author is already signed in to, through each service's own documented API and with credentials the author issued to himself. Everything it retrieves stays on his machines. It publishes nothing, posts nothing and sends nothing on anyone's behalf.</p>
+
+    <h2 class="text-xl font-bold text-blue-900 mt-10 mb-3">No warranty</h2>
+    <p class="mb-6">The tool is provided as is, without warranty of any kind. The author accepts no liability arising from its use, since he is its only user.</p>
+
+    <h2 class="text-xl font-bold text-blue-900 mt-10 mb-3">Changes and contact</h2>
+    <p class="mb-6">These terms may change at any time; the date above records the last change. Questions: <a class="text-blue-600 hover:underline" href="mailto:yuri@trukhin.com">yuri@trukhin.com</a>.</p>
+  </main>
 </body>
 </html>
