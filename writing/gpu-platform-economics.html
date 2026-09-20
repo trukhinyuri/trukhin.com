@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What building a GPU cloud product in 2019–2020 taught me about AI infrastructure economics — Yuri Trukhin</title>
+  <meta name="description" content="Inference cost-per-token is a tariff problem. Notes from building a V100/vGPU public cloud product at MTS in 2019–2020 — utilization, configurations as promises, availability as COGS — and how they map onto today's inference economics.">
+  <link rel="canonical" href="https://trukhin.com/writing/gpu-platform-economics">
+  <meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#101114" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:site_name" content="Yuri Trukhin">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="What building a GPU cloud product in 2019–2020 taught me about AI infrastructure economics">
+  <meta property="og:description" content="Inference cost-per-token is a tariff problem. Utilization, configurations as promises, availability as COGS — the 2019 GPU cloud lessons that map onto today's AI infrastructure.">
+  <meta property="og:url" content="https://trukhin.com/writing/gpu-platform-economics">
+  <meta property="article:published_time" content="2026-09-20T00:00:00+02:00">
+  <meta property="article:author" content="Yuri Trukhin">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="GPU platform economics — Yuri Trukhin">
+  <meta name="twitter:description" content="What building a GPU cloud product in 2019–2020 taught me about AI infrastructure economics.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": "https://trukhin.com/writing/gpu-platform-economics#post",
+        "url": "https://trukhin.com/writing/gpu-platform-economics",
+        "headline": "What building a GPU cloud product in 2019–2020 taught me about AI infrastructure economics",
+        "description": "Inference cost-per-token is a tariff problem. Notes from building a V100/vGPU public cloud product at MTS in 2019–2020 — utilization, configurations as promises, availability as COGS — and how they map onto today's inference economics.",
+        "datePublished": "2026-09-20",
+        "dateModified": "2026-09-20",
+        "inLanguage": "en",
+        "isPartOf": { "@id": "https://trukhin.com/writing/#blog" },
+        "mainEntityOfPage": { "@id": "https://trukhin.com/writing/gpu-platform-economics#post" },
+        "author": { "@id": "https://trukhin.com/#person" },
+        "publisher": { "@id": "https://trukhin.com/#person" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://trukhin.com/#person",
+        "name": "Iurii Trukhin",
+        "alternateName": "Yuri Trukhin",
+        "url": "https://trukhin.com/",
+        "jobTitle": "Cloud & AI Platforms Leader",
+        "sameAs": [
+          "https://github.com/trukhinyuri",
+          "https://x.com/trukhinyuri",
+          "https://www.linkedin.com/in/trukhinyuri"
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://trukhin.com/writing/gpu-platform-economics#breadcrumbs",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "trukhin.com", "item": "https://trukhin.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Writing", "item": "https://trukhin.com/writing/" },
+          { "@type": "ListItem", "position": 3, "name": "GPU platform economics", "item": "https://trukhin.com/writing/gpu-platform-economics" }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="wordmark" href="/">Yuri Trukhin<span>.</span></a>
+      <nav class="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/speaking">Speaking</a></li>
+          <li><a href="/writing/" aria-current="page">Writing</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-head">
+      <div class="container">
+        <a class="backlink" href="/writing/">All writing</a>
+        <p class="eyebrow">AI infrastructure · first person</p>
+        <h1>What building a GPU cloud product in 2019&ndash;2020 taught me about AI infrastructure economics</h1>
+        <p class="lede">Inference cost-per-token is a tariff problem. I first met it as V100/vGPU configurations, utilization curves and support tickets.</p>
+        <p class="post-meta">
+          <time datetime="2026-09-20">2026-09-20</time>
+          <span>~1,200 words</span>
+          <span>Yuri Trukhin</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+      <article class="prose" id="post">
+        <p>In 2019 my assignment at MTS Cloud was to turn GPUs into a public cloud product. We had NVIDIA V100 cards, we had virtualization with vGPU profiles, and we had clients who wanted to train models without buying hardware. What we did not have was a product: nobody had decided what exactly we sell, at what price, at what availability, and who answers when a node dies at 3 a.m.</p>
+        <p>Getting there took most of 2019 and 2020. The engineering was rarely the hard part. The hard part was economic: every configuration is a price, every promise is a cost, and utilization decides whether the whole line makes money. Seven years later, cost-per-token is the tariff of the AI era, and I keep recognizing the same problems in new clothes.</p>
+
+        <h2>The unit is not the GPU &mdash; it is the usable compute-hour</h2>
+        <p>A V100 rented as a dedicated instance and the same card sliced into vGPU profiles are different products with different economics. Slicing raises the potential revenue per card: eight clients can share what one would have hogged. It also raises fragmentation: a card holding two half-empty profiles cannot host a full one, and every profile boundary is a small bet on what demand will look like tomorrow.</p>
+        <p>Meanwhile idle GPU capital burns at exactly the same rate whether booked or not. Depreciation, power, space and financing do not pause while the scheduler waits for a tenant. So the tariff has to be designed against the utilization curve you can actually reach &mdash; not the one on the vendor slide. That is why commitment discounts exist on both sides of the market: a reserved-instance discount is a hedge where the client trades flexibility for price and the operator trades margin for predictability. Neither side should pretend it is a gift.</p>
+        <p>The curve also has a shape, and pretending otherwise wastes money. Training demand arrives in waves &mdash; nights, weekends, end of quarter &mdash; while inference demand is a flat line with spikes. A tariff can reshape that: off-peak pricing moves tolerant jobs into the valleys, quotas protect the steady tenants from the bursty ones. But a tariff that reshapes demand is a product decision with engineering consequences, agreed with the scheduler, the capacity plan and support &mdash; not a number improvised for a deal.</p>
+
+        <h2>Configurations are promises</h2>
+        <p>A configuration is not a line in a catalog; it is a promise about isolation and performance. A vGPU profile is nominally a fraction of the card, but the client experiences it as a fraction of the machine: memory bandwidth, driver behavior, noisy neighbors. When the promise and the experience diverge, the difference arrives as a support ticket and, eventually, as churn.</p>
+        <p>Two client patterns dominated. Training was bursty: big allocations, runs lasting days, restarts tolerable if checkpointing was disciplined. Inference was steady: small, latency-sensitive, always-on. Almost everything else was a mixture. Right-sizing mattered more than catalog breadth &mdash; a mis-sized configuration produced the worst of both worlds, an unhappy client and a poor margin. And every extra SKU multiplied the support surface: documentation, monitoring, capacity planning. The minimal set that covers the dominant workloads beats a long menu, every time.</p>
+        <p>GPU workloads skew, too. Some are memory-hungry and compute-idle; others pack arithmetic and leave bandwidth asleep. Counting only fractions of a card hides this, which is why the honest catalog describes memory and compute separately and the honest operator sizes profiles against what clients actually run, not against what divides cleanly.</p>
+
+        <h2>Training and inference are different products on one silicon</h2>
+        <p>They ride the same hardware and share nothing else. Training wants peaks and large contiguous allocations; inference wants density, steadiness and low tail latency. A maintenance window is a rounding error for a checkpointed training job and an outage for an inference endpoint. The mix sitting on a node at any moment is the margin &mdash; a fleet that is all training on Monday and all inference on Friday is paying for two fleets and using one.</p>
+        <p>We treated it as one fleet with two products on top, and the catalog decisions followed from that: which configurations serve which duty cycle, what gets scheduled where, what the tenant sees when their workload class changes. The same physics is why today&rsquo;s inference providers obsess over batching and queueing: the silicon does not care about your product taxonomy, only your scheduler does.</p>
+
+        <h2>Availability is priced, not assumed</h2>
+        <p>When a GPU node fails, every tenant on it feels the failure at once; with vGPU that is by design, one card holding many promises. Live migration for GPU workloads was limited, so maintenance became a product event that needed scheduling, communication and a story &mdash; not an ops footnote. Spare capacity for failures is not idle waste; it is inventory, and it belongs in the tariff.</p>
+        <p>The general rule I took away: support cost is cost of goods sold. The availability number in a service description is not marketing copy &mdash; it is the amortized price of spare nodes, monitoring, failover paths and the people who answer at 3 a.m. An availability promise you have not costed is a liability you have already signed.</p>
+
+        <h2>What this maps to in 2026</h2>
+        <p>Cost-per-token is the tariff of the inference era, and it is decided by the same three levers as our 2019 tariff: what the unit of delivered work is, what utilization the operator can reach, and what promise attaches to it. Batch sizes, quantization and KV-cache management are the new vGPU profiles &mdash; ways to slice one piece of silicon into sellable fractions. The vocabulary changed; the bin-packing did not.</p>
+        <p>Commitments came back into my life from the other side. In FinOps work at CloudLinux I now run the discipline I once faced as a seller: coverage checks before AWS commitments, a hard separation between what a projection says and what the bill measured. The 2019 lesson holds with interest &mdash; never confuse the forecast with the invoice.</p>
+        <p>And agents changed the duty cycle again. Agent fleets are spiky, parallel and long-tail; they look like 2019 training bursts, except they run on inference silicon and are triggered by software that retries without patience. Whoever prices agent compute this decade is answering the 2019 question one more time: what is the unit, what is the promise, and what does idle cost.</p>
+
+        <h2>The boundary</h2>
+        <p>This was a historical product, at one company, in one market. Its internal numbers stay internal, and the forecasts we made publicly at <a href="https://www.youtube.com/watch?v=tkY0DJ-u-cU">AI Journey 2020</a> were forecasts &mdash; not achieved metrics, then or now. What transferred is not a number but a discipline: price the unit of delivered work, watch utilization before capacity, and treat every configuration as a promise with a cost attached.</p>
+        <p>If you are building AI infrastructure today: the silicon is faster and the market is larger, but the questions have not changed. That is, incidentally, why I find them comfortable.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <p>Yuri Trukhin · <a href="/">trukhin.com</a> · static, no tracking</p>
+      <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/projects">Projects</a></li>
+        <li><a href="/speaking">Speaking</a></li>
+        <li><a href="/writing/">Writing</a></li>
+        <li><a href="/llms.txt">llms.txt</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>
