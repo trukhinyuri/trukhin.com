@@ -1,55 +1,57 @@
-# Personal Site
+# trukhin.com — v2
 
-This project is a personal website designed to showcase the professional profile of Yuri Trukhin, aimed at tech employers, investors, and partners. The site features a clean, modern layout that highlights key achievements, experience, skills, and impact metrics.
+Personal site of Yuri Trukhin — Cloud & AI Platforms Leader. Static HTML, one
+hand-written stylesheet, zero JavaScript, zero external requests (no CDNs, no
+web fonts, no tracking). Built for people and for AI agents: semantic HTML,
+JSON-LD on every page, `llms.txt` / `llms-full.txt`, sitemap, per-page canonical.
 
-## Project Structure
-
-The project consists of the following files and directories:
+## Structure
 
 ```
-personal-site/
-├── index.html           # Single-page landing built with Tailwind CDN
-├── package.json         # npm config (for future scripts/deps)
-├── postcss.config.js    # (optional, if local build is needed)
-├── tailwind.config.js   # (optional, Tailwind customization)
-├── README.md            # Project overview
-├── LICENSE              # MIT License
-└── .gitignore           # Git ignore rules
+├── index.html                    # positioning, three documented cases, now-feed
+├── about.html                    # verified chronology 2007–2026, principles
+├── projects.html                 # codex-superpower, agent-tools/CloudRING, capital3, MTS GPU
+├── speaking.html                 # talks and demos, 2013–2024
+├── writing/
+│   ├── index.html                # writing hub
+│   └── gpu-platform-economics.html   # first post, 2026-09-20
+├── privacy.html, terms.html      # legal pages for agent-tools (text unchanged since 2026-08-26)
+├── 404.html
+├── robots.txt                    # open to all crawlers, AI included
+├── sitemap.xml
+├── llms.txt, llms-full.txt       # agent-facing map and full plain text
+├── assets/
+│   ├── style.css                 # the only stylesheet (light/dark via prefers-color-scheme)
+│   └── favicon.svg               # YT monogram
+├── tools/
+│   └── build-llms-full.py        # regenerates llms-full.txt from the HTML pages
+└── archive/                      # v1 files (previous site), for reference only
 ```
 
-## Setup Instructions
+## Content policy
 
-1. **Clone the Repository**
-   ```bash
-   git clone <repository-url>
-   cd personal-site
-   ```
+Every claim on the site comes from a verified evidence base and carries its
+boundary where the evidence is limited. Unverified figures from the v1 site
+(ARR, user counts, team-growth multiples, uptime percentages) are deliberately
+absent. No numbers of the current employer are published (NDA). v1 content and
+history: `archive/` and git history.
 
-2. **Install Dependencies** (optional for local build)
-   ```bash
-   npm install
-   ```
+## Serving
 
-3. **Build the Project**
-   To build the CSS using Tailwind and PostCSS, run:
-   ```bash
-   npm run build
-   ```
+Any static host. Locally:
 
-4. **Serve the Project**
-   To serve the project locally, use:
-   ```bash
-   npm start
-   ```
+```sh
+python3 -m http.server 8000
+# then open http://localhost:8000/
+```
 
-## Usage
+GitHub Pages resolves `/about` → `about.html` and `/writing/` →
+`writing/index.html` automatically; canonical URLs use that clean form.
 
-Open `index.html` in your web browser or serve the directory on a static host (e.g., GitHub Pages) to view the landing. Responsive design ensures seamless experience on desktop and mobile.
+## Regenerating llms-full.txt
 
-## Contributing
+After editing page content:
 
-Contributions are welcome! Please feel free to submit a pull request or open an issue for any suggestions or improvements.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for more details.
+```sh
+python3 tools/build-llms-full.py
+```
