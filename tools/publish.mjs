@@ -89,12 +89,12 @@ const matchesManifestHash = (buf, expectedHash, relPath) => {
   const direct = sha(buf);
   if (direct === expectedHash) return { ok: true, mode: 'exact', got: direct };
   if (relPath.endsWith('.html')) {
-    const text = buf.toString('utf8');
-    for (const variant of [
-      text.replace(/<!--email_off-->\n?/g, '<!--email_off-->\n').replace(/<!--\/email_off-->\n?/g, '<!--/email_off-->\n'),
-      text.replace(/\n?<!--\/?email_off-->/g, ''),
+    const localHtml = readFileSync(`dist/${relPath}`, 'utf8');
+    for (const stripped of [
+      localHtml.replace(/<!--\/?email_off-->/g, ''),
+      localHtml.replace(/\n?<!--\/?email_off-->/g, ''),
     ]) {
-      if (sha(Buffer.from(variant, 'utf8')) === expectedHash) {
+      if (direct === sha(Buffer.from(stripped, 'utf8'))) {
         return { ok: true, mode: 'cloudflare-email-off', got: direct };
       }
     }

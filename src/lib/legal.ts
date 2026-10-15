@@ -28,11 +28,13 @@ export function legalPage(name: 'privacy' | 'terms', site: URL): string {
 <link rel="stylesheet" href="/legal.css">
 </head>
 <body>
+<!--email_off-->
 <header><a href="/">${SITE.name}</a>
 <nav aria-label="Policies"><ul><li><a href="/terms.html"${name === 'terms' ? ' aria-current="page"' : ''}>Terms</a></li><li><a href="/privacy.html"${name === 'privacy' ? ' aria-current="page"' : ''}>Privacy</a></li></ul></nav>
 </header>
 <main>
 ${body}</main>
+<!--/email_off-->
 </body>
 </html>
 `;
