@@ -1,0 +1,99 @@
+/* Blog: lists, post layout and long-form text. Measure ~66ch, no web fonts, no JS. */
+.blog-page { padding-block: clamp(2rem, 5vw, 4rem) 0; }
+.lede { color: var(--muted); margin: 0 0 1.5rem; }
+blockquote.lede { margin: 0 0 1.5rem; padding-left: 1rem; border-left: 3px solid var(--rule); }
+
+.blog-filters ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin: 0 0 2rem; }
+.blog-filters a { display: inline-block; min-height: 24px; padding-block: 0.15rem; }
+.blog-filters a[aria-current="page"] { color: var(--text); text-decoration-thickness: 2px; }
+
+.post-list { list-style: none; max-width: var(--measure); }
+.post-list li { padding-block: 1.25rem; border-bottom: 1px solid var(--rule); }
+.post-list li:first-child { padding-top: 0; }
+.post-list-title { font-size: 1.25rem; margin: 0 0 0.35rem; }
+.post-list-title a { color: var(--text); text-decoration: none; }
+.post-list-title a:hover { text-decoration: underline; }
+.post-list-desc { margin: 0 0 0.35rem; }
+.post-list-meta { margin: 0; color: var(--muted); font-size: var(--step-small); }
+
+.archive { margin-top: 3rem; max-width: var(--measure); }
+.archive > h2 { padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+.archive-year h3 { font-size: 1rem; color: var(--muted); margin: 1.5rem 0 0.5rem; }
+.archive-year ul { list-style: none; }
+.archive-year li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 1rem; padding-block: 0.3rem; }
+.archive-year time { color: var(--muted); font-size: var(--step-small); padding-top: 0.15rem; }
+.feeds { margin-top: 2.5rem; color: var(--muted); }
+
+/* Post */
+.post { padding-block: clamp(2rem, 5vw, 4rem) 0; }
+.post-header, .post .prose, .post-footer, .toc { max-width: var(--measure); }
+.crumbs { margin: 0 0 1rem; }
+.post-title { font-size: clamp(1.875rem, 1.4rem + 2vw, 2.75rem); line-height: 1.15; font-weight: 650; letter-spacing: -0.015em; margin: 0 0 0.75rem; }
+.post-subtitle { font-size: 1.25rem; color: var(--muted); margin: 0 0 1rem; }
+.post-meta { color: var(--muted); margin: 0 0 2rem; }
+
+.toc { border: 1px solid var(--rule); border-radius: 8px; padding: 1rem 1.25rem; margin: 0 0 2.5rem; }
+.toc h2 { font-size: var(--step-small); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 0.5rem; }
+.toc ol { padding-left: 1.25rem; }
+.toc li { margin-block: 0.2rem; }
+.toc ul { padding-left: 1.25rem; list-style: circle; margin: 0.2rem 0 0.4rem; }
+
+.prose { font-size: var(--step-body); line-height: 1.7; }
+.prose h2 { font-size: 1.5rem; margin: 2.5rem 0 1rem; scroll-margin-top: 1rem; }
+.prose h3 { font-size: 1.2rem; margin: 2rem 0 0.75rem; scroll-margin-top: 1rem; }
+.prose h4 { font-size: 1.05rem; margin: 1.5rem 0 0.5rem; }
+.prose p, .prose ul, .prose ol, .prose blockquote, .prose figure, .prose pre, .prose table { margin: 0 0 1.25rem; }
+.prose ul, .prose ol { padding-left: 1.5rem; }
+.prose li { margin-block: 0.3rem; }
+.prose li > ul, .prose li > ol { margin: 0.3rem 0 0; }
+.prose blockquote { padding-left: 1rem; border-left: 3px solid var(--rule); color: var(--muted); font-style: italic; }
+.prose hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+.prose img { display: block; max-width: 100%; height: auto; margin-inline: auto; border-radius: 4px; }
+.prose figure { margin-inline: 0; }
+.prose figcaption { color: var(--muted); font-size: var(--step-small); text-align: center; margin-top: 0.5rem; }
+.prose .embed a { word-break: break-all; }
+.prose table { border-collapse: collapse; display: block; overflow-x: auto; max-width: 100%; }
+.prose th, .prose td { border: 1px solid var(--rule); padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+.prose :not(pre) > code { font-family: var(--font-mono); font-size: 0.9em; background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
+.prose a { overflow-wrap: anywhere; }
+
+/* Code: Shiki dual theme through classes (src/lib/shiki-classes.mjs, dist/shiki.css). */
+.prose pre {
+  font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.55;
+  padding: 1rem 1.25rem; border-radius: 6px; overflow-x: auto; white-space: pre;
+  background: var(--code-bg); border: 1px solid var(--rule);
+}
+.prose pre code { font-family: inherit; }
+.astro-code { color: var(--shiki-light); background-color: var(--shiki-light-bg); }
+.astro-code span { color: var(--shiki-light); font-style: var(--shiki-light-font-style); font-weight: var(--shiki-light-font-weight); text-decoration: var(--shiki-light-text-decoration); }
+@media (prefers-color-scheme: dark) {
+  .astro-code { color: var(--shiki-dark); background-color: var(--shiki-dark-bg); }
+  .astro-code span { color: var(--shiki-dark); font-style: var(--shiki-dark-font-style); font-weight: var(--shiki-dark-font-weight); text-decoration: var(--shiki-dark-text-decoration); }
+}
+
+.post-footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+.post-footer > * + * { margin-top: 1.5rem; }
+.series-nav ul { list-style: none; display: grid; gap: 0.75rem; }
+.series-nav li span { display: block; }
+.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+.related h2, .author-name { font-size: 1.1rem; margin: 0 0 0.5rem; }
+.related ul { list-style: none; }
+.related li { padding-block: 0.3rem; }
+.author { border: 1px solid var(--rule); border-radius: 8px; padding: 1rem 1.25rem; }
+.author p { margin: 0 0 0.5rem; }
+.author-name a { color: var(--text); }
+
+/* Search */
+.search-form { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; max-width: var(--measure); margin-bottom: 1rem; }
+.search-form label { flex-basis: 100%; font-weight: 600; }
+.search-form input { flex: 1 1 16rem; font: inherit; padding: 0.5rem 0.75rem; border: 1px solid var(--muted); border-radius: 6px; background: var(--bg); color: var(--text); min-height: 44px; }
+.search-form button { font: inherit; padding: 0.5rem 1rem; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent); color: var(--bg); min-height: 44px; cursor: pointer; }
+.search-results { max-width: var(--measure); padding-left: 1.5rem; }
+.search-results li { margin-bottom: 1rem; }
+.search-results p { margin: 0.25rem 0 0; }
+.search-results mark { background: var(--code-bg); color: var(--text); font-weight: 600; }
+
+@media print {
+  .toc, .post-footer, .blog-filters, .feeds { display: none; }
+  .prose pre { white-space: pre-wrap; }
+}

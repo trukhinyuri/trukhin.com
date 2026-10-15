@@ -1,0 +1,20 @@
+---
+import { publishedPosts, postUrl } from '../lib/posts';
+const posts = (await publishedPosts()).slice(0, 3);
+const fmt = (d: Date, lang: string) =>
+  d.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+{posts.length > 0 && (
+  <section id="blog" class="section wrap blog-teaser-section" aria-labelledby="blog-h">
+    <h2 id="blog-h">From the blog</h2>
+    <ul class="items blog-teaser">
+      {posts.map((p) => (
+        <li lang={p.data.lang}>
+          <a href={postUrl(p)}>{p.data.title}</a>
+          <span class="meta"><time datetime={p.data.pubDate.toISOString().slice(0, 10)}>{fmt(p.data.pubDate, p.data.lang)}</time> · {p.data.lang === 'ru' ? 'Русский' : 'English'}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="more"><a href="/blog/">All posts</a> · <a href="/blog/rss.xml">RSS</a></p>
+  </section>
+)}

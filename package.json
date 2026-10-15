@@ -1,27 +1,50 @@
 {
-  "name": "personal-site",
-  "version": "1.0.0",
-  "description": "A personal site showcasing the profile and achievements of Yuri Trukhin, aimed at tech employers, investors, and partners.",
-  "main": "src/index.html",
-  "scripts": {
-    "build": "postcss src/styles.css -o dist/styles.css",
-    "watch": "postcss src/styles.css -o dist/styles.css --watch",
-    "start": "live-server --open=src/index.html"
+  "name": "trukhin-com",
+  "version": "5.2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
   },
-  "keywords": [
-    "personal-site",
-    "portfolio",
-    "Yuri Trukhin",
-    "web-development"
-  ],
-  "author": "Yuri Trukhin",
-  "license": "MIT",
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro check && ASTRO_TELEMETRY_DISABLED=1 astro build && node tools/postbuild.mjs",
+    "preview": "astro preview",
+    "check": "node tools/check.mjs",
+    "check:all": "test -n \"$TRUKHIN_POLICY\" || { echo 'check:all: set TRUKHIN_POLICY to the private policy file'; exit 1; }; npm run build && npm run check && npx --no playwright test && node tools/check-repro.mjs",
+    "manifest": "node tools/manifest.mjs",
+    "check:print": "node tools/check-print.mjs",
+    "check:repro": "node tools/check-repro.mjs",
+    "images": "node tools/images.mjs",
+    "build:on": "PRIVATE_BLOCKS_DIR=${PRIVATE_BLOCKS_DIR:?set PRIVATE_BLOCKS_DIR} ASTRO_TELEMETRY_DISABLED=1 astro build --outDir dist-on && DIST=dist-on node tools/postbuild.mjs",
+    "new-post": "node tools/new-post.mjs",
+    "import:rss": "node tools/import-rss.mjs",
+    "import:medium-export": "node tools/import-medium-export.mjs",
+    "redirects:build": "node tools/redirects-build.mjs",
+    "images:medium": "node tools/images-medium.mjs",
+    "publish": "node tools/publish.mjs"
+  },
   "dependencies": {
-    "tailwindcss": "^2.2.19",
-    "postcss": "^8.4.6",
-    "autoprefixer": "^10.4.0"
+    "@astrojs/markdown-satteri": "0.4.3",
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "3.7.4",
+    "astro": "7.3.8",
+    "astro-og-canvas": "0.13.2"
   },
   "devDependencies": {
-    "live-server": "^1.2.1"
+    "@astrojs/check": "0.9.10",
+    "@axe-core/playwright": "4.13.0",
+    "@expo-google-fonts/inter": "0.4.2",
+    "@playwright/test": "1.64.0",
+    "fast-xml-parser": "5.11.2",
+    "html-validate": "11.16.2",
+    "lighthouse": "13.5.0",
+    "linkinator": "8.1.0",
+    "pagefind": "1.5.2",
+    "schema-dts": "2.1.0",
+    "sharp": "0.35.5",
+    "simple-icons": "16.34.0",
+    "turndown": "7.2.4",
+    "typescript": "6.0.3"
   }
 }

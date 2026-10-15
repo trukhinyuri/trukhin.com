@@ -1,0 +1,139 @@
+{
+  "$comment": "Interface strings and pointers into card.txt. Facts live only in card.txt: every outcome quotes the exact canon words it restates (canonPhrase); the canon line is derived at build time.",
+  "updated": "2026-10-15",
+  "roleLine": "Director of Infrastructure at CloudLinux, reporting to the CEO",
+  "location": "Amsterdam",
+  "handle": "@trukhinyuri",
+  "summary": "I build and scale cloud, GPU and AI platforms end to end, from architecture, code and multi-datacenter operations to full P&L and autonomous AI agent systems. Director of Infrastructure at CloudLinux, reporting to the CEO. Amsterdam.",
+  "outcomes": [
+    {
+      "value": "€40M+",
+      "caption": "annual recurring revenue - built #CloudMTS (MTS Web Services) from employee #1 and an internal hobby project into a hyperscaler (#2 in regional IaaS by revenue, MTS 2020 annual report), creating Cloud Hub, Cloud Billing, Open Cloud Standard v1/v2 and 14 cloud services",
+      "canonPhrase": "In 30 months I built and scaled the cloud business from a startup to more than €40M in annual recurring revenue; by MTS's 2020 annual report it was number two in regional IaaS by revenue"
+    },
+    {
+      "value": "1 → 4 PFLOPS",
+      "caption": "commercial NVIDIA DGX-1 Tesla V100 GPU cloud I launched in July 2019 and ran as a product for AI training and inference (MTS)",
+      "canonPhrase": "launched in July 2019 on NVIDIA DGX-1 with Tesla V100 GPUs at 1 petaflop, it grew to 4 petaflops by November 2020. In 2019–2020 I ran it as a product"
+    },
+    {
+      "value": "15M+ · 3x · +25",
+      "caption": "developers on JetBrains tools; 3x adoption growth and +25 NPS across Docker, Kubernetes and AI workflow features on the IntelliJ Platform",
+      "canonPhrase": "More than 15 million developers use JetBrains tools. I led the launch of Docker, Kubernetes and AI workflow features: their adoption grew 3x and NPS rose by 25 points"
+    },
+    {
+      "value": "140+",
+      "caption": "people in product, platform engineering and operations at MTS Web Services (#CloudMTS); built the provider's entire engineering vertical end to end, owned the full P&L and beat revenue and EBITDA targets year after year",
+      "canonPhrase": "I led more than 140 people in product, platform engineering and operations, headed the cloud development center and platform and services engineering at MTS Web Services (MWS), owned the full P&L"
+    },
+    {
+      "value": "SLSA Level 3",
+      "caption": "global infrastructure, hybrid cloud economics, zero-trust and software supply chain security across CloudLinux and TuxCare, plus Interim CSO",
+      "canonPhrase": "architected SLSA Build Level 3 software supply chain security with isolated ephemeral runners and cryptographically signed daily provenance audits"
+    },
+    {
+      "value": "300M+ · 60+",
+      "caption": "daily tokens across autonomous multi-agent workloads and 60+ cloud, observability and developer systems; founder of TRUKHIN #CloudRING, merged upstream contributor to Rook Ceph, OpenClaw (390k+ stars), Chrome DevTools MCP, Dev Containers and RalphX, and contributor across the Linux kernel (arm64 ASLR Reviewed-by: Kees Cook), Kubernetes Kueue, Nebius Soperator, NVIDIA NVSentinel, vLLM AIBrix, Ceph, Kata Containers and OpenNebula",
+      "canonPhrase": "across more than 300M tokens of daily production and R&D workloads. My open-source and executive engineering harness orchestrates frontier models (OpenAI Codex, Anthropic Claude and Google Gemini) across 60+ cloud, observability and developer systems"
+    }
+  ],
+  "kickers": {
+    "cloudlinux": [
+      {
+        "label": "Executive scope and organization",
+        "canonPhrase": "I report to the CloudLinux CEO"
+      },
+      {
+        "label": "Enterprise AI transformation",
+        "canonPhrase": "move to Claude Code as its standard AI coding tool"
+      },
+      {
+        "label": "Cloud economics and platform architecture",
+        "canonPhrase": "multi-year capacity and spend architecture"
+      },
+      {
+        "label": "Interim CSO and supply chain security",
+        "canonPhrase": "covered the chief security officer role"
+      }
+    ],
+    "jetbrains": [
+      {
+        "label": "Cloud, AI and DevOps product direction",
+        "canonPhrase": "I set product direction for cloud, AI and DevOps"
+      }
+    ],
+    "mts": [
+      {
+        "label": "Employee #1 to hyperscaler: Cloud Hub, Cloud Billing, Open Cloud Standard v1/v2 and 14 cloud services",
+        "canonPhrase": "I joined as the first employee in MTS's cloud engineering department"
+      },
+      {
+        "label": "€40M+ ARR (#2 in regional IaaS), 1 → 4 PFLOPS GPU SuperCloud and 140+ organization",
+        "canonPhrase": "In 30 months I built and scaled the cloud business"
+      }
+    ],
+    "infobox": [
+      {
+        "label": "Cloud strategy, CTO mandate and European multi-DC expansion",
+        "canonPhrase": "Infobox was one of the first hosting providers"
+      }
+    ],
+    "tver": [
+      {
+        "label": "Distributed data systems and scientific computing",
+        "canonPhrase": "I built systems to store, process and analyze"
+      }
+    ],
+    "outside": [
+      {
+        "label": "Open-source cloud platform: TRUKHIN #CloudRING and OCSv3",
+        "canonPhrase": "I founded TRUKHIN #CloudRING"
+      },
+      {
+        "label": "Autonomous multi-agent harness: 300M+ daily tokens across 60+ systems",
+        "canonPhrase": "For the past two years I have spent thousands of hours"
+      },
+      {
+        "label": "Upstream open-source contributions: Linux kernel, Rook Ceph, OpenClaw and cloud infrastructure",
+        "canonPhrase": "I also contribute upstream across the Linux kernel"
+      }
+    ]
+  },
+  "links": {
+    "TRUKHIN #CloudRING, an open-source cloud platform": "https://cloudring.org",
+    "TRUKHIN #CloudRING": "https://cloudring.org",
+    "zero-dependency Go and Rust SDKs": "https://github.com/opencloudtech/CloudRING/pull/178",
+    "build it in the open": "https://github.com/opencloudtech/CloudRING",
+    "break a large goal into outcomes and experiments": "https://github.com/trukhinyuri/outcome-driven-recursive-decomposition",
+    "delegate tasks to other agent CLIs": "https://github.com/trukhinyuri/codex-harness-connect",
+    "forecast usage budgets": "https://github.com/trukhinyuri/codex-budget",
+    "OpenClaw (390k+ GitHub stars)": "https://github.com/openclaw/openclaw/pull/170857",
+    "Rook Ceph operators": "https://github.com/rook/rook/pull/18564",
+    "ChromeDevTools/chrome-devtools-mcp": "https://github.com/ChromeDevTools/chrome-devtools-mcp/pull/3135",
+    "the Linux kernel (arm64 mmap ASLR entropy reviewed by Kees Cook, ACPICA AML parser and checkpatch)": "https://lore.kernel.org/r/CAOx7e9Jm0N9O_ndL1UApMPrXUN=P4RiptSNibdDP+9prUsNPOw@mail.gmail.com",
+    "puppeteer/puppeteer": "https://github.com/puppeteer/puppeteer/pull/15585",
+    "Kubernetes SIGs Kueue": "https://github.com/kubernetes-sigs/kueue/pull/17160",
+    "Nebius Soperator for Slurm on Kubernetes": "https://github.com/nebius/soperator/pull/3116",
+    "NVIDIA NVSentinel GPU fault remediation": "https://github.com/NVIDIA/NVSentinel/pull/2028",
+    "vLLM AIBrix inference control plane": "https://github.com/vllm-project/aibrix/pull/3078",
+    "Ceph BlueStore and RGW": "https://github.com/ceph/ceph/pull/72706",
+    "Ceph CSI and Kubernetes CSI-Addons": "https://github.com/ceph/ceph-csi/pull/6649",
+    "Kata Containers": "https://github.com/kata-containers/kata-containers/pull/14048",
+    "OpenNebula hypervisor and scheduler": "https://github.com/OpenNebula/one/pull/8180",
+    "Apache MINA SSHD": "https://github.com/apache/mina-sshd/pull/930",
+    "Jenkins Pipeline and Prometheus plugins": "https://github.com/jenkinsci/workflow-support-plugin/pull/434",
+    "CNCF OpenCost": "https://github.com/opencost/opencost/pull/4112",
+    "Chainguard apko SLSA builders": "https://github.com/chainguard-dev/apko/pull/2578",
+    "Sigstore Cosign verification": "https://github.com/sigstore/cosign/pull/5167",
+    "Grafana Mimir prometheus analyzer": "https://github.com/grafana/mimir/pull/16868",
+    "Development Containers specification (devcontainers/spec)": "https://github.com/devcontainers/spec/pull/381",
+    "the Dev Containers specification": "https://github.com/devcontainers/spec/pull/381",
+    "aigentive/RalphX": "https://github.com/aigentive/RalphX/pull/120",
+    "the new terminal architecture (2025)": "https://blog.jetbrains.com/idea/2025/04/jetbrains-terminal-a-new-architecture/",
+    "Dev Containers in JetBrains IDEs (2024)": "https://blog.jetbrains.com/idea/2024/07/using-dev-containers-in-jetbrains-ides-part-1/",
+    "the GPU SuperCloud in medicine": "https://www.youtube.com/watch?v=tkY0DJ-u-cU",
+    "A demo of the MTS cloud platform": "https://www.youtube.com/watch?v=4tXJKbomBcE",
+    "Debugging Kubernetes with IntelliJ IDEA (2024)": "https://www.youtube.com/watch?v=4r9i063Vpzg",
+    "Dream Team Principles": "https://github.com/trukhinyuri/-DreamDevTeamPrinciples"
+  }
+}

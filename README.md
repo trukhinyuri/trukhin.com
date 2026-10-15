@@ -1,55 +1,85 @@
-# Personal Site
+# trukhin.com
 
-This project is a personal website designed to showcase the professional profile of Yuri Trukhin, aimed at tech employers, investors, and partners. The site features a clean, modern layout that highlights key achievements, experience, skills, and impact metrics.
+Source of https://trukhin.com — the personal site of Yuri (IURII) Trukhin: profile, writing and blog.
 
-## Project Structure
+Static site built with [Astro](https://astro.build). No client-side JavaScript on the profile or posts,
+no web fonts, no cookies or trackers, light and dark themes from the system setting, a print
+stylesheet that fits the home page on two pages, and a layer for agents:
+JSON-LD (`ProfilePage` + `Person`), `/llms.txt`, `/llms-full.txt`, `/index.md`, `robots.txt` and a sitemap.
 
-The project consists of the following files and directories:
+## Use
 
+```sh
+npm ci
+npm run dev          # http://localhost:4321
+npm run build        # astro check + static build into dist/
+npm run check        # HTML validity, canon, facts, JSON-LD, agent files, internal links, contrast, policy
+npm run check:all    # build + check + Playwright (axe, CSP, print, structure) + check:repro; needs TRUKHIN_POLICY
+npm run check:print  # home page prints on ≤ 2 pages, A4 and Letter (needs Chrome)
+npm run check:repro  # two builds give the same id
+npm run manifest     # build/manifest.txt and the approval id
+npm run publish -- --id <id>   # dry run of a publish; --apply commits, pushes and checks the live bytes
 ```
-personal-site/
-├── index.html           # Single-page landing built with Tailwind CDN
-├── package.json         # npm config (for future scripts/deps)
-├── postcss.config.js    # (optional, if local build is needed)
-├── tailwind.config.js   # (optional, Tailwind customization)
-├── README.md            # Project overview
-├── LICENSE              # MIT License
-└── .gitignore           # Git ignore rules
+
+## Write a post
+
+```sh
+npm run new-post -- --title "Three agents, three philosophies" --lang en --series byteburst --tags "ai,agents"
+npm run dev          # http://localhost:4321/blog/<slug>/ — drafts are visible in dev only
 ```
 
-## Setup Instructions
+1. The file is `src/content/blog/<slug>/index.md`. Edit it in any editor (VS Code, Zed, iA Writer, or Obsidian
+   with a vault on `src/content/blog`). Frontmatter: `title`, `description` (50–200 characters, used by search
+   engines and link previews), `pubDate`, `lang` (`en`/`ru`), `tags` (up to 8), optional `series`/`seriesOrder`,
+   `status`.
+2. Markdown: `##` for sections (the title is the page's only `h1`; three or more sections get a table of contents),
+   fenced code blocks with a language (highlighted at build time, light and dark), footnotes, tables.
+   Images go to `public/blog/<slug>/` and are written as `![what the image shows](/blog/<slug>/file.png)`.
+3. When it is ready: `status: published`, then `npm run build && npm run check`. One line per problem.
+4. `npm run manifest` prints the id of exactly this build. Publish with `npm run publish -- --id <id> --apply`.
 
-1. **Clone the Repository**
-   ```bash
-   git clone <repository-url>
-   cd personal-site
-   ```
+From a phone: edit on a branch in GitHub's web editor and open a pull request (the CI check that builds it and prints the id comes with the deployment workflow).
 
-2. **Install Dependencies** (optional for local build)
-   ```bash
-   npm install
-   ```
+Every post gets: its own OG card, `BlogPosting` and breadcrumbs in JSON-LD, an entry in RSS, Atom and JSON Feed
+(full text, latest 50) and in the sitemap, a Markdown twin at `/blog/<slug>.md`, related posts by tags, previous
+and next in its series, and a place in the search index (`/blog/search/`, Pagefind; the only page with JavaScript).
 
-3. **Build the Project**
-   To build the CSS using Tailwind and PostCSS, run:
-   ```bash
-   npm run build
-   ```
+## Blog moved from Medium
 
-4. **Serve the Project**
-   To serve the project locally, use:
-   ```bash
-   npm start
-   ```
+- `npm run import:rss` imports the latest posts from the Medium RSS; `npm run import:medium-export -- <dir>`
+  imports the full account export (unzip it into an empty folder outside this repository first).
+  Imported posts keep their text exactly: `medium.textHash` is re-checked against the rendered page on every
+  `npm run check`.
+- One switch, `blogCanonical` in `src/data/site.ts`, sets the canonical URL of imported posts: `'medium-domain'`
+  (now: the original address on blog.trukhin.com, which Medium still serves) or `'self'` (after the move, together with
+  the 301 map). Canonical, og:url and JSON-LD follow it; `tools/check-canonical.mjs` proves they agree.
+- Images of imported posts are still loaded from Medium's CDN, and stay there until the owner decides to copy them.
+  `npm run images:medium` shows how many and how large; `--apply` copies them here.
+- `redirects/blog-trukhin-com.csv` is the 301 map for `blog.trukhin.com` (Cloudflare Bulk Redirects),
+  regenerated by `npm run redirects:build` and checked by `npm run check`. Posts that stay on Medium are kept in a
+  private list outside this repository (`TRUKHIN_PRIVATE_REDIRECTS`).
 
-## Usage
+## How content is kept honest
 
-Open `index.html` in your web browser or serve the directory on a static host (e.g., GitHub Pages) to view the landing. Responsive design ensures seamless experience on desktop and mobile.
+- Every paragraph on the home page is rendered from `src/content/profile/card.txt` byte for byte;
+  `tools/check-canon.mjs` proves it on the built HTML and pins the file's sha256 (`6fe03c838a912efa…`).
+  `card.txt` is a copy of my canonical profile text; to sync, copy the new text over it and update the pin.
+- `llms.txt` has a `## Facts` section of sentences quoted from `card.txt`; `tools/check-agent-files.mjs` checks them.
+- Every number on the home page and in the agent files exists in the canon (`tools/check-facts.mjs`).
+- JSON-LD values must be visible on the page (`tools/check-jsonld.mjs`).
+- The approval id is the first 16 hex characters of the sha256 of `build/manifest.txt`
+  (one line per file of `dist/`: sha256, size, path). Builds are reproducible, so the same
+  source gives the same id on any machine.
 
-## Contributing
+## Publish and roll back
 
-Contributions are welcome! Please feel free to submit a pull request or open an issue for any suggestions or improvements.
+Publishing is a deliberate human step. `npm run publish -- --id <id>` refuses unless the tree is clean, the clean
+install, build and every check pass, and the id equals both the build and the id the owner recorded. With `--apply`
+it commits with a `Publish-Id:` trailer, pushes to `main`, waits for the deploy and compares every file of the
+manifest with the live site byte for byte. Roll back with `npm run publish -- --revert <commit>` (new build, new id).
+Agents do not push (see `AGENTS.md`).
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+Code: MIT (`LICENSE`). Texts and images: © Iurii Trukhin, all rights reserved (`CONTENT-NOTICE.md`).
+Inter font in `fonts/`: SIL Open Font License 1.1 (`fonts/OFL.txt`). Icons: Simple Icons, CC0.

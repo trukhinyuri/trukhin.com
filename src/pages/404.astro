@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+---
+<Base
+  title={`Page not found · ${SITE.name}`}
+  description="This page does not exist on trukhin.com."
+  path="/404/"
+  noindex
+  og={{ image: '/og/index.png', alt: SITE.name }}
+>
+  <div class="wrap"><div class="notfound">
+    <h1 class="page-title">Page not found</h1>
+    <p>There is nothing at this address. Try the <a href="/">home page</a> or <a href="/writing/">Writing elsewhere</a>.</p>
+  </div></div>
+</Base>

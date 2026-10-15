@@ -1,0 +1,19 @@
+---
+import { fmtDate, isoDay, LANG_NAME, postUrl, readingMinutes, wordCount, type Post } from '../../lib/posts';
+interface Props { posts: Post[]; descriptions?: boolean; headingLevel?: 2 | 3 }
+const { posts, descriptions = true, headingLevel = 2 } = Astro.props;
+const H = headingLevel === 2 ? 'h2' : 'h3';
+---
+<ul class="post-list">
+  {posts.map((p) => (
+    <li lang={p.data.lang}>
+      <H class="post-list-title"><a href={postUrl(p)}>{p.data.title}</a></H>
+      {descriptions && <p class="post-list-desc">{p.data.description}</p>}
+      <p class="post-list-meta">
+        <time datetime={isoDay(p.data.pubDate)}>{fmtDate(p.data.pubDate, p.data.lang)}</time>
+        <span aria-hidden="true"> · </span><span lang="en">{readingMinutes(wordCount(p.body))} min read</span>
+        <span aria-hidden="true"> · </span><span>{LANG_NAME[p.data.lang]}</span>
+      </p>
+    </li>
+  ))}
+</ul>

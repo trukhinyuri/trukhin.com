@@ -1,0 +1,36 @@
+---
+import { CANON, linkify } from '../lib/canon';
+import { byId } from '../data/profiles';
+import profile from '../content/profile/profile.json';
+interface Props { used: Set<string> }
+const { used } = Astro.props;
+// Last line of card.txt, rendered with the same words and links behind them.
+const contactLinks: Record<string, string> = {
+  LinkedIn: byId('linkedin').url,
+  GitHub: byId('github').url,
+  X: byId('x').url,
+  'yuri@trukhin.com': byId('email').url,
+};
+const contactParts = CANON.contact.text.split(' · ');
+---
+<section class="hero wrap" aria-labelledby="name">
+  <div class="hero-top">
+    <div class="hero-ident">
+      <h1 id="name" data-canon-line="1">{CANON.name}</h1>
+      <p class="role-line" data-canon-line="2 6 7">{profile.roleLine} · {profile.location} · {profile.handle}</p>
+      <p class="print-only">yuri@trukhin.com · trukhin.com · linkedin.com/in/trukhinyuri · github.com/trukhinyuri</p>
+      <p class="thesis" data-canon-line={CANON.lead.line}>{CANON.thesis}</p>
+    </div>
+    <picture class="hero-photo">
+      <source srcset="/avatar-192.avif 1x, /avatar-384.avif 2x" type="image/avif">
+      <source srcset="/avatar-192.webp 1x, /avatar-384.webp 2x" type="image/webp">
+      <img src="/avatar-192.jpg" srcset="/avatar-192.jpg 1x, /avatar-384.jpg 2x" alt="Yuri (IURII) Trukhin" width="192" height="192" fetchpriority="high" decoding="async">
+    </picture>
+  </div>
+  <p class="lead-rest" data-canon-line={CANON.lead.line} set:html={linkify(CANON.leadRest, used)} />
+  <p class="contact-line" data-canon-line={CANON.contact.line}>
+    {contactParts.map((part, i) => (
+      <>{i > 0 && ' · '}{contactLinks[part] ? <a href={contactLinks[part]} rel="me">{part}</a> : part}</>
+    ))}
+  </p>
+</section>

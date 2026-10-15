@@ -1,0 +1,29 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import PostList from '../../../../components/blog/PostList.astro';
+import BlogFilters from '../../../../components/blog/BlogFilters.astro';
+import Feeds from '../../../../components/blog/Feeds.astro';
+import { SITE } from '../../../../data/site';
+import { publishedPosts, tagPages, type Post } from '../../../../lib/posts';
+import { listGraph } from '../../../../lib/jsonld-blog';
+
+export async function getStaticPaths() {
+  const posts = await publishedPosts();
+  return tagPages(posts).map((t) => ({ params: { tag: t.slug }, props: { tag: t.tag, slug: t.slug, posts: t.posts } }));
+}
+interface Props { tag: string; slug: string; posts: Post[] }
+const { tag, slug, posts } = Astro.props;
+const site = Astro.site ?? new URL('https://trukhin.com');
+const all = await publishedPosts();
+const title = `#${tag} · Blog · ${SITE.name}`;
+const description = `Posts tagged ${tag} in the blog of ${SITE.name}: ${posts.length} posts, newest first.`;
+const path = `/blog/tags/${slug}/`;
+---
+<Base title={title} description={description} path={path} og={{ image: '/og/blog.png', alt: `Blog of ${SITE.name}` }} jsonld={listGraph(site, path, title, posts)} current="blog">
+  <div class="wrap blog-page">
+    <h1 class="page-title">#{tag}</h1>
+    <BlogFilters posts={all} current={`tag:${slug}`} />
+    <PostList posts={posts} />
+    <Feeds />
+  </div>
+</Base>

@@ -1,0 +1,21 @@
+---
+import { SITE } from '../data/site';
+import profile from '../content/profile/profile.json';
+interface Props { hasBlog: boolean }
+const { hasBlog } = Astro.props;
+const updated = new Date(`${profile.updated}T00:00:00Z`);
+const human = updated.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+---
+<footer class="site-footer">
+  <div class="wrap small muted">
+    <p>Last updated <time datetime={profile.updated}>{human}</time></p>
+    <ul>
+      <li><a href={SITE.repo}>Source on GitHub</a></li>
+      <li>agent-tools <a href="/privacy.html">privacy</a> &amp; <a href="/terms.html">terms</a></li>
+      {hasBlog && <li><a href="/blog/rss.xml">RSS</a></li>}
+      <li><a href="/llms.txt">llms.txt</a></li>
+      <li>No cookies or trackers.</li>
+      <li>© {SITE.legalName}</li>
+    </ul>
+  </div>
+</footer>

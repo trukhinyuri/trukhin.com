@@ -1,0 +1,15 @@
+---
+import profile from '../content/profile/profile.json';
+import { canonLine } from '../lib/canon';
+---
+<section id="outcomes" class="section wrap" aria-labelledby="outcomes-h">
+  <h2 id="outcomes-h">Selected outcomes</h2>
+  <ul class="outcomes">
+    {profile.outcomes.map((o) => (
+      <li data-canon-line={canonLine(o.canonPhrase)}>
+        <span class="num">{o.value}</span>
+        <span class="cap">{o.caption}</span>
+      </li>
+    ))}
+  </ul>
+</section>

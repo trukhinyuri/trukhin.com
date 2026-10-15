@@ -1,0 +1,30 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import PostList from '../../../../components/blog/PostList.astro';
+import BlogFilters from '../../../../components/blog/BlogFilters.astro';
+import Feeds from '../../../../components/blog/Feeds.astro';
+import { SITE } from '../../../../data/site';
+import { LANG_NAME, langsOf, publishedPosts, type Lang, type Post } from '../../../../lib/posts';
+import { listGraph } from '../../../../lib/jsonld-blog';
+
+export async function getStaticPaths() {
+  const posts = await publishedPosts();
+  return langsOf(posts).map((lang) => ({ params: { lang }, props: { lang, posts: posts.filter((p) => p.data.lang === lang) } }));
+}
+interface Props { lang: Lang; posts: Post[] }
+const { lang, posts } = Astro.props;
+const site = Astro.site ?? new URL('https://trukhin.com');
+const all = await publishedPosts();
+const title = `${LANG_NAME[lang]} · Blog · ${SITE.name}`;
+const description = `Posts in ${lang === 'ru' ? 'Russian' : 'English'} in the blog of ${SITE.name}, newest first.`;
+const path = `/blog/lang/${lang}/`;
+---
+<Base title={title} description={description} path={path} og={{ image: '/og/blog.png', alt: `Blog of ${SITE.name}` }} jsonld={listGraph(site, path, title, posts)} current="blog">
+  <Fragment slot="head"><link rel="alternate" type="application/rss+xml" title={`Blog, ${LANG_NAME[lang]} (RSS)`} href={`/blog/lang/${lang}/rss.xml`}></Fragment>
+  <div class="wrap blog-page">
+    <h1 class="page-title"><span lang={lang}>{LANG_NAME[lang]}</span></h1>
+    <BlogFilters posts={all} current={`lang:${lang}`} />
+    <PostList posts={posts} />
+    <Feeds lang={lang} />
+  </div>
+</Base>

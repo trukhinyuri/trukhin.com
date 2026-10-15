@@ -1,0 +1,19 @@
+---
+import { CANON, kickerFor, linkify } from '../lib/canon';
+import OptionalProjectCard from './OptionalProjectCard.astro';
+interface Props { used: Set<string>; blocks: { title: string; url: string; repo?: string | undefined; text: string }[] }
+const { used, blocks } = Astro.props;
+---
+<section id="outside" class="section wrap outside" aria-labelledby="outside-h">
+  <h2 id="outside-h">{CANON.outside.heading}</h2>
+  {CANON.outside.paras.map((p) => {
+    const k = kickerFor('outside', p.text);
+    return (
+      <>
+        {k && <h3 class="kicker">{k}</h3>}
+        <p data-canon-line={p.line} set:html={linkify(p.text, used)} />
+      </>
+    );
+  })}
+  {blocks.map((b) => <OptionalProjectCard {...b} />)}
+</section>

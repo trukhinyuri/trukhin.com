@@ -1,0 +1,21 @@
+---
+import { byYear, fmtDate, isoDay, postUrl, type Post } from '../../lib/posts';
+interface Props { posts: Post[] }
+const years = byYear(Astro.props.posts);
+---
+<section class="archive" aria-labelledby="archive-h">
+  <h2 id="archive-h">Archive</h2>
+  {years.map(([year, ps]) => (
+    <section class="archive-year" aria-labelledby={`y${year}`}>
+      <h3 id={`y${year}`}>{year}</h3>
+      <ul>
+        {ps.map((p) => (
+          <li lang={p.data.lang}>
+            <time datetime={isoDay(p.data.pubDate)}>{fmtDate(p.data.pubDate, 'en', 'short')}</time>
+            <a href={postUrl(p)}>{p.data.title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</section>

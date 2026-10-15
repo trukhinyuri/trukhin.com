@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Outcomes from '../components/Outcomes.astro';
+import RoleTimeline from '../components/RoleTimeline.astro';
+import Outside from '../components/Outside.astro';
+import Talks from '../components/Talks.astro';
+import FromBlog from '../components/FromBlog.astro';
+import Profiles from '../components/Profiles.astro';
+import { SITE } from '../data/site';
+import { homeGraph } from '../lib/jsonld';
+import { enabledBlocks } from '../lib/blocks';
+import profile from '../content/profile/profile.json';
+
+const site = Astro.site ?? new URL('https://trukhin.com');
+const blocks = (await enabledBlocks()).map((b) => b.data);
+// One set per page: each anchor phrase from profile.json is linked once, in reading order.
+const used = new Set<string>();
+const [first, last] = ['Yuri', 'Trukhin'];
+---
+<Base
+  title={`${SITE.name} · ${SITE.jobTitle} at ${SITE.employer.name}`}
+  description={profile.summary}
+  path="/"
+  current="home"
+  og={{ image: '/og/index.png', alt: `${SITE.name}, ${profile.roleLine}, ${profile.location}`, type: 'profile' }}
+  jsonld={homeGraph(site, blocks)}
+>
+  <Fragment slot="head">
+    <link rel="alternate" type="text/markdown" href="/index.md" title="This page in Markdown">
+  </Fragment>
+  <Fragment slot="og">
+    <meta property="profile:first_name" content={first}>
+    <meta property="profile:last_name" content={last}>
+    <meta property="profile:username" content={SITE.handle}>
+  </Fragment>
+  <Hero used={used} />
+  <Outcomes />
+  <RoleTimeline used={used} />
+  <Outside used={used} blocks={blocks} />
+  <Talks used={used} />
+  <FromBlog />
+  <Profiles />
+</Base>

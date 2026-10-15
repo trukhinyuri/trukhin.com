@@ -1,1 +1,11 @@
+node_modules/
+dist/
+dist-*/
+build/
+.astro/
+.pr/
 .DS_Store
+*.local.json
+test-results/
+playwright-report/
+.agents/

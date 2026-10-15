@@ -1,0 +1,36 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import PostList from '../../../../components/blog/PostList.astro';
+import BlogFilters from '../../../../components/blog/BlogFilters.astro';
+import Feeds from '../../../../components/blog/Feeds.astro';
+import { SITE } from '../../../../data/site';
+import { publishedPosts, SERIES, seriesPosts, type Post } from '../../../../lib/posts';
+import { listGraph, seriesNode } from '../../../../lib/jsonld-blog';
+
+export async function getStaticPaths() {
+  const posts = await publishedPosts();
+  return Object.values(SERIES)
+    .map((s) => ({ s, ps: seriesPosts(posts, s.slug) }))
+    .filter((x) => x.ps.length > 0)
+    .map(({ s, ps }) => ({ params: { series: s.slug }, props: { name: s.name, slug: s.slug, posts: ps } }));
+}
+interface Props { name: string; slug: string; posts: Post[] }
+const { name, slug, posts } = Astro.props;
+const site = Astro.site ?? new URL('https://trukhin.com');
+const all = await publishedPosts();
+// The series description is the opening paragraph of issue #0, quoted, when that post is here.
+const zero = posts.find((p) => p.data.seriesOrder === 0);
+const opening = zero?.body?.split(/\n{2,}/).find((b) => b.trim() && !/^[#<!`~-]/.test(b.trim()))?.replace(/[*_`]/g, '').trim();
+const title = `${name} · Blog · ${SITE.name}`;
+const description = `All issues of ${name}, a series in my blog, in order.`;
+const path = `/blog/series/${slug}/`;
+---
+<Base title={title} description={description} path={path} og={{ image: '/og/blog.png', alt: `Blog of ${SITE.name}` }} jsonld={listGraph(site, path, title, posts, [seriesNode(site, slug)])} current="blog">
+  <div class="wrap blog-page">
+    <h1 class="page-title">{name}</h1>
+    {opening ? <blockquote class="lede prose-width" lang={zero?.data.lang}><p>{opening}</p></blockquote> : <p class="lede prose-width">{description}</p>}
+    <BlogFilters posts={all} current={`series:${slug}`} />
+    <PostList posts={posts} />
+    <Feeds />
+  </div>
+</Base>

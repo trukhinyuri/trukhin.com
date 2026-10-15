@@ -1,0 +1,43 @@
+/* The home page prints on at most two pages, A4 or Letter (paper size follows the printer). */
+@page { margin: 8mm 11mm; }
+@media print {
+  :root {
+    --bg: #fff; --text: #000; --muted: #333; --rule: #bbb; --accent: #000;
+    color-scheme: light;
+  }
+  body { font-size: 8.2pt; line-height: 1.15; background: #fff; color: #000; }
+  .site-header, .skip-link, .site-nav, .no-print, .blog-teaser-section, .profiles-personal,
+  .profiles-music, .profiles, .project-card, .site-footer, .hero .contact-line, .hero-photo { display: none !important; }
+  .print-only { display: block !important; }
+  .wrap { max-width: none; padding: 0; }
+  .hero { padding: 0; }
+  .hero-top { display: block; margin: 0; gap: 0; }
+  .hero h1 { font-size: 19pt; margin-bottom: 2pt; }
+  .hero .role-line { margin: 0 0 4pt; }
+  .hero .thesis { font-size: 10.5pt; max-width: none; margin: 0 0 3pt; }
+  .hero .lead-rest { max-width: none; }
+  .section { padding-top: 3pt; }
+  .section > h2 { font-size: 11pt; padding-top: 3pt; margin-bottom: 2.5pt; break-after: avoid; }
+  h2, h3, h4 { break-after: avoid; }
+  p { margin-bottom: 2.5pt; orphans: 3; widows: 3; }
+  .outcomes { display: block; border: 0; }
+  .outcomes li { display: inline; padding: 0; border: 0; }
+  .outcomes li + li::before { content: " · "; }
+  .outcomes .num { display: inline; font-size: inherit; }
+  .outcomes .cap { display: inline; color: inherit; }
+  .role { display: grid; grid-template-columns: 17mm 1fr; column-gap: 4mm; padding-block: 3pt; }
+  .talks li { break-inside: avoid; }
+  .role h4, .outside h3.kicker { break-after: avoid; }
+  .role .period { margin: 0; font-size: 8.5pt; padding-top: 1.5pt; }
+  .timeline > li:first-child .role { padding-top: 0; }
+  .role h3 { font-size: 9.5pt; margin-bottom: 1.5pt; }
+  /* Kickers run in at the start of their paragraph to save a line each. */
+  .role h4 { float: left; clear: left; margin: 0 4pt 0 0; font-size: 7.5pt; line-height: 10.5pt; padding-top: 0.5pt; }
+  .outside h3.kicker { display: none; }
+  .talks li { margin-bottom: 1pt; }
+  .role-body, .outside p, .talks { max-width: none; }
+  a { color: inherit; text-decoration: none; }
+  .talks a[href^="http"]::after { content: " (" attr(data-host) ")"; color: #333; }
+  .profiles h3 { margin-top: 3pt; }
+}
+.print-only { display: none; }

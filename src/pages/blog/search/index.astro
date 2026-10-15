@@ -1,0 +1,18 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { SITE } from '../../../data/site';
+// The only page with JavaScript: Pagefind (static index built after astro build, same origin).
+---
+<Base title={`Search · Blog · ${SITE.name}`} description={`Search the blog of ${SITE.name}: posts about AI coding agents, cloud infrastructure and engineering teams.`} path="/blog/search/" og={{ image: '/og/blog.png', alt: `Blog of ${SITE.name}` }} noindex scripts current="blog">
+  <Fragment slot="head"><script data-cfasync="false" type="module" src="/blog-search.js"></script></Fragment>
+  <div class="wrap blog-page search-page">
+    <h1 class="page-title">Search the blog</h1>
+    <form role="search" action="/blog/search/" method="get" class="search-form">
+      <label for="q">Search posts</label>
+      <input id="q" name="q" type="search" autocomplete="off" spellcheck="false">
+      <button type="submit">Search</button>
+    </form>
+    <p id="search-status" class="small muted" role="status" aria-live="polite">Search runs in your browser. Without JavaScript, use the <a href="/blog/">archive</a>.</p>
+    <ol id="search-results" class="search-results"></ol>
+  </div>
+</Base>

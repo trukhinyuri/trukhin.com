@@ -1,0 +1,12 @@
+---
+import { CANON, linkify } from '../lib/canon';
+interface Props { used: Set<string> }
+const { used } = Astro.props;
+---
+<section id="writing" class="section wrap" aria-labelledby="writing-h">
+  <h2 id="writing-h">{CANON.talks.heading}</h2>
+  <ul class="talks">
+    {CANON.talks.items.map((p) => <li data-canon-line={p.line} set:html={linkify(p.text, used)} />)}
+  </ul>
+  <p class="more no-print"><a href="/writing/">More talks and articles <span aria-hidden="true">→</span></a></p>
+</section>

@@ -1,0 +1,31 @@
+---
+import Icon from './Icon.astro';
+import { shown } from '../data/profiles';
+import { publishedPosts } from '../lib/posts';
+import { CANON } from '../lib/canon';
+const hasBlog = (await publishedPosts()).length > 0;
+const professional = shown('professional');
+const groups = [
+  { id: 'personal', title: 'Personal', items: shown('personal') },
+  { id: 'music', title: CANON.music.heading, items: shown('music'), note: CANON.music.paras.map((p) => p.text).join(' ') },
+];
+---
+<section id="contact" class="section wrap profiles" aria-labelledby="contact-h">
+  <h2 id="contact-h">Elsewhere</h2>
+  <div class="profiles-professional">
+    <h3 id="professional-h">Professional</h3>
+    <ul aria-labelledby="professional-h">
+      {professional.map((p) => <li><a href={p.url} rel="me"><Icon name={p.icon} />{p.label}</a></li>)}
+      {hasBlog && <li><a href="/blog/rss.xml"><Icon name="rss" />Blog RSS</a></li>}
+    </ul>
+  </div>
+  {groups.map((g) => g.items.length > 0 && (
+    <div class={`profiles-${g.id}`}>
+      <h3 id={`${g.id}-h`}>{g.title}</h3>
+      {g.note && <p class="note">{g.note}</p>}
+      <ul aria-labelledby={`${g.id}-h`}>
+        {g.items.map((p) => <li><a href={p.url} rel="me"><Icon name={p.icon} />{p.label}</a></li>)}
+      </ul>
+    </div>
+  ))}
+</section>

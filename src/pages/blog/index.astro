@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/blog/PostList.astro';
+import Archive from '../../components/blog/Archive.astro';
+import BlogFilters from '../../components/blog/BlogFilters.astro';
+import Feeds from '../../components/blog/Feeds.astro';
+import { SITE } from '../../data/site';
+import { publishedPosts } from '../../lib/posts';
+import { listGraph } from '../../lib/jsonld-blog';
+import { BLOG_INTRO } from '../../data/blog';
+
+const site = Astro.site ?? new URL('https://trukhin.com');
+const posts = await publishedPosts();
+const title = `Blog · ${SITE.name}`;
+---
+<Base title={title} description={BLOG_INTRO} path="/blog/" og={{ image: '/og/blog.png', alt: `Blog of ${SITE.name}` }} jsonld={listGraph(site, '/blog/', title, posts)} current="blog">
+  <div class="wrap blog-page">
+    <h1 class="page-title">Blog</h1>
+    <p class="lede prose-width">{BLOG_INTRO}</p>
+    <BlogFilters posts={posts} current="all" />
+    <section aria-labelledby="latest-h">
+      <h2 id="latest-h" class="visually-hidden">Latest posts</h2>
+      <PostList posts={posts.slice(0, 10)} headingLevel={3} />
+    </section>
+    {posts.length > 10 && <Archive posts={posts} />}
+    <Feeds />
+  </div>
+</Base>

@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site';
+import { writingItems, JETBRAINS_AUTHOR } from '../../lib/writing';
+import { ids } from '../../lib/jsonld';
+
+const site = Astro.site ?? new URL('https://trukhin.com');
+const items = await writingItems();
+const fmt = (d: string) => {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return new Date(`${d}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  if (/^\d{4}-\d{2}$/.test(d)) return new Date(`${d}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+  return d;
+};
+const url = new URL('/writing/', site).href;
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${url}#page`,
+  url,
+  name: `Writing elsewhere · ${SITE.name}`,
+  isPartOf: { '@id': ids(site).website },
+  about: { '@id': ids(site).person },
+  inLanguage: 'en',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: items.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'CreativeWork',
+        name: it.data.title,
+        url: it.data.url,
+        inLanguage: it.data.lang,
+        ...(it.data.date ? { datePublished: it.data.date } : {}),
+        author: { '@id': ids(site).person },
+      },
+    })),
+  },
+};
+---
+<Base
+  title={`Writing elsewhere · ${SITE.name}`}
+  description="Talks, articles and open documents by Yuri (IURII) Trukhin on other sites: JetBrains Blog, AI Journey, YouTube, the Infobox blog and GitHub."
+  path="/writing/"
+  current="writing"
+  og={{ image: '/og/writing.png', alt: `Writing elsewhere, ${SITE.name}` }}
+  jsonld={jsonld}
+>
+  <div class="wrap section">
+    <h1 class="page-title">Writing elsewhere</h1>
+    <p class="prose-width muted">Talks, articles and documents published on other sites. My posts on JetBrains Blog are also listed on my <a href={JETBRAINS_AUTHOR.url} rel="me">JetBrains Blog author page</a>.</p>
+    <ul class="items">
+      {items.map((it) => (
+        <li>
+          <span class="meta">{it.data.date && <><time datetime={it.data.date.includes('–') ? it.data.date.slice(0, 4) : it.data.date}>{fmt(it.data.date)}</time> · </>}{it.data.venue}</span>
+          <a href={it.data.url} lang={it.data.lang}>{it.data.title}</a>
+          {it.data.note && <span class="note">{it.data.note}</span>}
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>

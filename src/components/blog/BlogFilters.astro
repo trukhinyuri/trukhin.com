@@ -1,0 +1,21 @@
+---
+import { langsOf, LANG_NAME, SERIES, tagPages, type Post } from '../../lib/posts';
+interface Props { posts: Post[]; current?: string }
+const { posts, current } = Astro.props;
+const items = [
+  { href: '/blog/', label: 'All', key: 'all' },
+  ...(langsOf(posts).length > 1 ? langsOf(posts).map((l) => ({ href: `/blog/lang/${l}/`, label: LANG_NAME[l], key: `lang:${l}`, lang: l })) : []),
+  ...Object.values(SERIES)
+    .filter((s) => posts.some((p) => p.data.series === s.slug))
+    .map((s) => ({ href: `/blog/series/${s.slug}/`, label: s.name, key: `series:${s.slug}` })),
+  ...tagPages(posts).map((t) => ({ href: `/blog/tags/${t.slug}/`, label: `#${t.tag}`, key: `tag:${t.slug}` })),
+  { href: '/blog/search/', label: 'Search', key: 'search' },
+];
+---
+<nav class="blog-filters" aria-label="Blog sections">
+  <ul>
+    {items.map((i) => (
+      <li><a href={i.href} lang={'lang' in i ? i.lang : undefined} aria-current={i.key === current ? 'page' : undefined}>{i.label}</a></li>
+    ))}
+  </ul>
+</nav>

@@ -1,0 +1,23 @@
+---
+import type { MarkdownHeading } from 'astro';
+interface Props { headings: MarkdownHeading[]; lang: string }
+const { headings, lang } = Astro.props;
+const clean = (s: string) => s.replace(/^\d+\.\s+/, '');
+// h2 with their h3 children, as a nested list (numbering counts sections only).
+const tree: { h: MarkdownHeading; sub: MarkdownHeading[] }[] = [];
+for (const h of headings) {
+  if (h.depth === 2) tree.push({ h, sub: [] });
+  else if (h.depth === 3 && tree.length) tree[tree.length - 1]!.sub.push(h);
+}
+---
+<nav class="toc" aria-label="Contents">
+  <h2 id="toc-h" lang="en">Contents</h2>
+  <ol lang={lang}>
+    {tree.map(({ h, sub }) => (
+      <li>
+        <a href={`#${h.slug}`}>{clean(h.text)}</a>
+        {sub.length > 0 && <ul>{sub.map((s) => <li><a href={`#${s.slug}`}>{clean(s.text)}</a></li>)}</ul>}
+      </li>
+    ))}
+  </ol>
+</nav>

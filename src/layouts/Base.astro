@@ -1,0 +1,103 @@
+---
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/prose.css';
+import '../styles/print.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../data/site';
+import { ldJson } from '../lib/jsonld';
+import { publishedPosts } from '../lib/posts';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path of this page, e.g. "/" or "/writing/". */
+  path: string;
+  og: { image: string; alt: string; type?: 'profile' | 'article' | 'website' };
+  jsonld?: unknown;
+  noindex?: boolean;
+  lang?: string;
+  /** Extra script sources allowed by CSP (search page only). */
+  scripts?: boolean;
+  current?: 'home' | 'writing' | 'blog';
+  /** Absolute canonical URL when it is not this page (imported posts point at the original, DESIGN-SPEC §8.3). */
+  canonical?: string | undefined;
+  /** Extra image origins (imported posts until their images are copied here). */
+  imgSrc?: string[];
+  /** Pages with highlighted code link the Shiki colour classes (generated into dist by tools/shiki-css.mjs). */
+  shikiCss?: boolean;
+}
+const { title, description, path, og, jsonld, noindex = false, lang = 'en', scripts = false, current, imgSrc = [], shikiCss = false } = Astro.props;
+const site = Astro.site ?? new URL('https://trukhin.com');
+const self = new URL(path, site).href;
+const canonical = Astro.props.canonical ?? self;
+const ogImage = new URL(og.image, site).href;
+const hasBlog = (await publishedPosts()).length > 0;
+const csp = [
+  "default-src 'self'",
+  scripts ? "script-src 'self' 'wasm-unsafe-eval'" : "script-src 'none'",
+  "style-src 'self'",
+  ["img-src 'self'", ...imgSrc].join(' '),
+  "font-src 'self'",
+  "connect-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  scripts ? "form-action 'self'" : "form-action 'none'",
+  'upgrade-insecure-requests',
+].join('; ');
+---
+<!DOCTYPE html>
+<html lang={lang} dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content={csp}>
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>{title}</title>
+<meta name="description" content={description}>
+<meta name="author" content={SITE.name}>
+<link rel="canonical" href={canonical}>
+<meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'}>
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content={SITE.themeColor.light}>
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content={SITE.themeColor.dark}>
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="author" href={new URL('/', site).href}>
+<link rel="describedby" href="/llms.txt" type="text/plain">
+{shikiCss && <link rel="stylesheet" href="/shiki.css">}
+<slot name="head" />
+{hasBlog && <link rel="alternate" type="application/rss+xml" title="Blog (RSS)" href="/blog/rss.xml">}
+{hasBlog && <link rel="alternate" type="application/atom+xml" title="Blog (Atom)" href="/blog/atom.xml">}
+{hasBlog && <link rel="alternate" type="application/feed+json" title="Blog (JSON Feed)" href="/blog/feed.json">}
+<meta property="og:site_name" content={SITE.name}>
+<meta property="og:type" content={og.type ?? 'website'}>
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'}>
+<meta property="og:image" content={ogImage}>
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content={og.alt}>
+<slot name="og" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@trukhinyuri">
+<meta name="twitter:creator" content="@trukhinyuri">
+<meta name="twitter:image:alt" content={og.alt}>
+{jsonld ? <script type="application/ld+json" set:html={ldJson(jsonld)} /> : null}
+</head>
+<body>
+<!--email_off-->
+<a class="skip-link" href="#main">Skip to content</a>
+<Header current={current} hasBlog={hasBlog} />
+<main id="main" tabindex="-1">
+<slot />
+</main>
+<Footer hasBlog={hasBlog} />
+<!--/email_off-->
+</body>
+</html>

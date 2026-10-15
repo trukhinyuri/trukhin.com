@@ -1,0 +1,123 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Toc from '../../../components/blog/Toc.astro';
+import SeriesNav from '../../../components/blog/SeriesNav.astro';
+import Feeds from '../../../components/blog/Feeds.astro';
+import { SITE } from '../../../data/site';
+import { byId } from '../../../data/profiles';
+import { CANON } from '../../../lib/canon';
+import {
+  fmtDate, isoDay, LANG_NAME, postMdUrl, postOg, postSlug, postUrl, publishedPosts, readingMinutes, related, seriesPosts,
+  tagKey, tagPages, wordCount, type Post,
+} from '../../../lib/posts';
+import { postCanonical, postGraph } from '../../../lib/jsonld-blog';
+
+export async function getStaticPaths() {
+  const posts = await publishedPosts();
+  return posts.map((post) => ({ params: { slug: postSlug(post) }, props: { post } }));
+}
+interface Props { post: Post }
+const { post } = Astro.props;
+const site = Astro.site ?? new URL('https://trukhin.com');
+const all = await publishedPosts();
+const { Content, headings } = await render(post);
+const d = post.data;
+const words = wordCount(post.body);
+const series = d.series ? seriesPosts(all, d.series) : [];
+const rel = related(post, all);
+const withPage = new Map(tagPages(all).map((t) => [t.tag, t.slug]));
+const tags = [...new Set(d.tags.map(tagKey))];
+const h2 = headings.filter((h) => h.depth === 2).length;
+// A post that carries its own table of contents (many Medium posts do) does not get a second one.
+const ownToc = headings.some((h) => /^(table of contents|contents|содержание|оглавление)$/i.test(h.text.trim()));
+const imported = d.status === 'imported' || !!d.medium;
+const remoteImages = /<img\s[^>]*src="https:\/\/(cdn-images-1|miro)\.medium\.com/.test(post.rendered?.html ?? '');
+// Wrap a post's own contents heading and the list after it in a nav landmark (markup only, text unchanged).
+function wrapOwnToc(html: string): string {
+  const h = /<h2 id="[^"]*">(?:table of contents|contents|содержание|оглавление)<\/h2>\s*<(ul|ol)>/i.exec(html);
+  if (!h) return html;
+  const tag = h[1] as string;
+  const re = new RegExp(`<(/?)${tag}>`, 'g');
+  re.lastIndex = h.index + h[0].length;
+  let depth = 1;
+  for (let m = re.exec(html); m; m = re.exec(html)) {
+    depth += m[1] ? -1 : 1;
+    if (depth === 0) {
+      const stop = m.index + m[0].length;
+      return `${html.slice(0, h.index)}<nav aria-label="Contents">${html.slice(h.index, stop)}</nav>${html.slice(stop)}`;
+    }
+  }
+  return html;
+}
+const ownTocHtml = ownToc && post.rendered?.html ? wrapOwnToc(post.rendered.html) : undefined;
+const translation = d.translationOf ? all.find((p) => postSlug(p) === d.translationOf) : undefined;
+---
+<Base
+  title={d.title.length > 48 ? d.title : `${d.title} · ${SITE.name}`}
+  description={d.description}
+  path={postUrl(post)}
+  canonical={postCanonical(site, post)}
+  lang={d.lang}
+  og={{ image: postOg(post), alt: d.title, type: 'article' }}
+  jsonld={postGraph(site, post, words)}
+  imgSrc={remoteImages ? ['https://cdn-images-1.medium.com', 'https://miro.medium.com'] : []}
+  shikiCss={/class="astro-code/.test(post.rendered?.html ?? '')}
+  current="blog"
+>
+  <Fragment slot="head">
+    <link rel="alternate" type="text/markdown" href={postMdUrl(post)}>
+    {translation && <link rel="alternate" hreflang={translation.data.lang} href={new URL(postUrl(translation), site).href}>}
+    {translation && <link rel="alternate" hreflang={d.lang} href={new URL(postUrl(post), site).href}>}
+  </Fragment>
+  <Fragment slot="og">
+    <meta property="article:published_time" content={d.pubDate.toISOString()}>
+    <meta property="article:modified_time" content={(d.updatedDate ?? d.pubDate).toISOString()}>
+    <meta property="article:author" content={new URL('/', site).href}>
+    {tags.map((t) => <meta property="article:tag" content={t}>)}
+  </Fragment>
+  <article class="post wrap" data-pagefind-body>
+    <header class="post-header">
+      <p class="crumbs small" lang="en"><a href="/blog/">Blog</a>{d.series && <> · <a href={`/blog/series/${d.series}/`}>BYTEBURST</a></>}</p>
+      <h1 class="post-title">{d.title}</h1>
+      {!imported && <p class="post-subtitle">{d.description}</p>}
+      <p class="post-meta small" lang="en" data-pagefind-ignore>
+        <time datetime={d.pubDate.toISOString()}>{fmtDate(d.pubDate, d.lang)}</time>
+        {d.updatedDate && <><span aria-hidden="true"> · </span>Updated <time datetime={d.updatedDate.toISOString()}>{fmtDate(d.updatedDate, d.lang)}</time></>}
+        <span aria-hidden="true"> · </span>{readingMinutes(words)} min read
+        <span aria-hidden="true"> · </span><span lang={d.lang}>{LANG_NAME[d.lang]}</span>
+        {d.series && <><span aria-hidden="true"> · </span>Part {d.seriesOrder} of BYTEBURST</>}
+      </p>
+    </header>
+    {h2 >= 3 && !ownToc && <Toc headings={headings} lang={d.lang} />}
+    <div class="prose">
+      {ownTocHtml ? <Fragment set:html={ownTocHtml} /> : <Content />}
+    </div>
+    <footer class="post-footer" lang="en" data-pagefind-ignore>
+      {d.medium && (
+        <p class="small muted">Originally published on Medium, <time datetime={isoDay(d.pubDate)}>{fmtDate(d.pubDate, 'en')}</time>{d.canonical ? <>: <a href={d.medium.url}>original post</a></> : null}.</p>
+      )}
+      {d.originallyPublished && <p class="small muted">First published at <a href={d.originallyPublished}>{new URL(d.originallyPublished).hostname}</a>.</p>}
+      {series.length > 1 && <SeriesNav post={post} series={series} />}
+      {tags.length > 0 && (
+        <ul class="tags" aria-label="Tags">
+          {tags.map((t) => <li>{withPage.has(t) ? <a href={`/blog/tags/${withPage.get(t)}/`}>#{t}</a> : <span>#{t}</span>}</li>)}
+        </ul>
+      )}
+      {rel.length > 0 && (
+        <section class="related" aria-labelledby="related-h">
+          <h2 id="related-h">Related</h2>
+          <ul>
+            {rel.map((p) => <li lang={p.data.lang}><a href={postUrl(p)}>{p.data.title}</a> <span class="small muted"><time datetime={isoDay(p.data.pubDate)}>{fmtDate(p.data.pubDate, 'en', 'short')}</time></span></li>)}
+          </ul>
+        </section>
+      )}
+      <section class="author" aria-labelledby="author-h">
+        <h2 id="author-h" class="author-name"><a href="/">{SITE.name}</a></h2>
+        <p>{CANON.thesis}</p>
+        <p class="small"><a href={byId('linkedin').url} rel="me">LinkedIn</a> · <a href={byId('github').url} rel="me">GitHub</a> · <a href={byId('x').url} rel="me">X</a></p>
+      </section>
+      <Feeds />
+    </footer>
+  </article>
+</Base>

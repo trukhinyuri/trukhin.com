@@ -1,0 +1,10 @@
+---
+import { byId } from '../../data/profiles';
+interface Props { lang?: 'en' | 'ru' | undefined }
+const { lang } = Astro.props;
+const rss = lang ? `/blog/lang/${lang}/rss.xml` : '/blog/rss.xml';
+---
+<p class="feeds small">
+  Subscribe: <a href={rss} type="application/rss+xml">RSS</a> · <a href="/blog/atom.xml" type="application/atom+xml">Atom</a> ·
+  <a href="/blog/feed.json" type="application/feed+json">JSON Feed</a> · <a href={byId('telegram').url} rel="me">Telegram</a>
+</p>

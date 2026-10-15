@@ -1,0 +1,26 @@
+---
+import { CANON, kickerFor, linkify, periodHtml } from '../lib/canon';
+interface Props { used: Set<string> }
+const { used } = Astro.props;
+---
+<section id="experience" class="section wrap" aria-labelledby="experience-h">
+  <h2 id="experience-h">Experience</h2>
+  <ol class="timeline">
+    {CANON.roles.map((r) => (
+      <li>
+        <article id={r.id} class="role" aria-labelledby={`${r.id}-h`} data-canon-line={r.line}>
+          <p class="period" set:html={periodHtml(r.period)} />
+          <div class="role-body">
+            <h3 id={`${r.id}-h`}>{r.org} · <span class="title">{r.title}</span></h3>
+            {r.paras.map((p) => (
+              <>
+                {kickerFor(r.id, p.text) && <h4>{kickerFor(r.id, p.text)}</h4>}
+                <p data-canon-line={p.line} set:html={linkify(p.text, used)} />
+              </>
+            ))}
+          </div>
+        </article>
+      </li>
+    ))}
+  </ol>
+</section>

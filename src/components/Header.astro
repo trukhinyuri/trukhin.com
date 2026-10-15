@@ -1,0 +1,21 @@
+---
+import { SITE } from '../data/site';
+interface Props { current?: 'home' | 'writing' | 'blog' | undefined; hasBlog: boolean }
+const { current, hasBlog } = Astro.props;
+const items = [
+  { href: '/#experience', label: 'Experience' },
+  { href: '/writing/', label: 'Writing', key: 'writing' },
+  ...(hasBlog ? [{ href: '/blog/', label: 'Blog', key: 'blog' }] : []),
+  { href: '/#contact', label: 'Contact' },
+];
+---
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-name" href="/" aria-current={current === 'home' ? 'page' : undefined}>{SITE.name}</a>
+    <nav class="site-nav" aria-label="Site">
+      <ul>
+        {items.map((i) => <li><a href={i.href} aria-current={i.key && i.key === current ? 'page' : undefined}>{i.label}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+</header>
